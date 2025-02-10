@@ -4,6 +4,10 @@
 
 ![Контейнерная диаграмма системы drawio (1)](https://github.com/user-attachments/assets/e2c065d9-d238-4ff5-b543-2c8d76d2340d)
 
+Компонентный уровень модели С4
+
+![image](https://github.com/user-attachments/assets/c053b44c-1799-42be-9fd1-0dec17d2e4c3)
+
 Диаграмма классов
 
 ![image](https://github.com/user-attachments/assets/d00df0a8-31e5-4510-ac93-5544abe303a4)
@@ -22,9 +26,9 @@
 
 ![image](https://github.com/user-attachments/assets/78357223-d4fc-45d1-8d40-658a6a81fc76)
 
-Диаграмма последовательности оценки качества услуг агрегаторов такси
+Диаграмма последовательности варианта использования “Просмотреть рейтинг”
 
-![image](https://github.com/user-attachments/assets/ee3243f8-e929-4fba-8838-c8c671a2173c)
+![image](https://github.com/user-attachments/assets/259f881a-0c68-4402-ad30-0222d1ad3ae1)
 
 <h1>Документация</h1>
 
