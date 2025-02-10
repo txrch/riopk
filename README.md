@@ -10,7 +10,7 @@
 
 Диаграмма деятельности
 
-![image](https://github.com/user-attachments/assets/655d8d0b-90dd-411e-9fd9-d95fd795a5a9)
+![image](https://github.com/user-attachments/assets/a35431b1-1aa9-47a4-9a6b-f341efe40201)
 
 Диаграмма вариантов использования
 
