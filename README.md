@@ -2,7 +2,7 @@
 
 С4 модель
 
-![image](https://github.com/user-attachments/assets/de478763-0273-4071-a158-888f5ab7df62)
+![Контейнерная диаграмма системы drawio (1)](https://github.com/user-attachments/assets/e2c065d9-d238-4ff5-b543-2c8d76d2340d)
 
 Диаграмма классов
 
