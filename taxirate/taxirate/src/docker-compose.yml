@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+  user_service:
+    image: taxi-quality-assessment/user-service
+    build: ./backend/user-service
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - postgres-net
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgresql:5432/taxirate
+    depends_on:
+      - postgresql
+    volumes:
+      - .m2:/root/.m2
+
+  aggregator_service:
+    image: taxi-quality-assessment/aggregator-service
+    build: ./backend/aggregator-service
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - postgres-net
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgresql:5432/taxirate?currentSchema=aggregator_schema
+    depends_on:
+      - postgresql
+    volumes:
+      - .m2:/root/.m2
+
+  front_end:
+    image: taxi-quality-assessment/frontend
+    build: ./client
+    restart: always
+    ports:
+      - 3000:3000
+
+  postgresql:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - postgres-net
+    environment:
+      POSTGRES_DB: taxirate
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+networks:
+  postgres-net:
