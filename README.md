@@ -36,13 +36,7 @@
 
 Результаты анализа
 
-Конечный результат анализа
-
-Оценка кода по метрике надежность
-
-Оценка кода по метрике безопасность
-
-Оценка кода по метрике поддерживаемость
+![image](https://github.com/user-attachments/assets/b98a7d7d-3cbc-4b61-b7ab-4de157fad776)
 
 <h1>Тестирование</h1>
 
@@ -416,27 +410,62 @@ User Flow для администратора
 
 Конфигурация SecurityFilterChain
 
-ссылку
+https://github.com/txrch/riopk/blob/main/taxirate/taxirate/src/main/java/com/app/security/SecurityConfiguration.java
 
 Конфигурация BCryptPasswordEncoder
 
-ссылку
+https://github.com/txrch/riopk/blob/main/taxirate/taxirate/src/main/java/com/app/security/SecurityConfiguration.java
 
 Создание JWT
 
-ссылку
+https://github.com/txrch/riopk/blob/main/taxirate/taxirate/src/main/java/com/app/security/JwtProvider.java
 
 <h1>Развертывание</h1>
 
 Dockerfile для сервиса TaxiServiceQualityAssessment
 
-ссылку
+https://github.com/txrch/riopk/blob/main/taxirate/taxirate/src/Dockerfile
 
 Этот Dockerfile описывает процесс сборки и запуска Java приложения, используя Maven для сборки и OpenJDK для выполнения. Первая фаза: FROM maven:3.9.8-eclipse-temurin-21 as maven-builder Это стадия использует образ Maven, который включает Java 21 от Eclipse Temurin. Имя этой стадии – maven-builder. Используя многоэтапную сборку, минимизируется размер итогового образа, копируя только необходимые артефакты. Копирование исходников и POM файла: COPY src /app/src COPY pom.xml /app Исходный код приложения и файл pom.xml копируются в директорию /app в контейнере. Это нужно для того, чтобы Maven мог выполнить сборку проекта. Рабочая директория и сборка с помощью Maven: WORKDIR /app RUN mvn clean install -U -DskipTests Устанавливается рабочая директория /app. Команда mvn clean install устанавливает все зависимости, компилирует код, упаковывает проект в JAR-файл, но пропускает тесты благодаря -DskipTests. Вторая фаза: Java Runtime Environment Использование OpenJDK для выполнения: FROM openjdk:21 Эта стадия основывается на образе OpenJDK 21. Здесь мы будем только запускать наше приложение, без всего лишнего, что используется в стадии сборки. Копирование артефакта: COPY --from=maven-builder /app/target /taxi-quality-assessment-service-1.0.0-SNAPSHOT.jar /app/app.jar Готовый JAR-файл копируется из предыдущей стадии в новую директорию /app под именем app.jar. Рабочая директория: WORKDIR /app Устанавливает рабочую директорию на /app. Открытие порта: EXPOSE 8080 Указание Docker, что контейнер будет слушать на порту 8080. Это типично для Spring Boot приложений. Команда для запуска: CMD ["java", "-jar", "app.jar"] Устанавливает команду, которая запускается при старте контейнера. В данном случае, это выполнение JAR-файла приложения с помощью java -jar. Dockerfile для сервиса paper-service схож по своей структуре с файлом для user-service.
 
 Dockerfile для сервиса TaxiAggregatorService
 
-ссылку
+https://github.com/txrch/riopk/blob/main/taxirate/taxirate/src/Dockerfile
 
 <h1>Руководство пользователя</h1>
 
+После успешного запуска веб-приложения, оператор встречается с страницей авторизации (рисунок 1), на которой он должен ввести свои логин и пароль. После ввода правильного логина и пароля, оператор нажимает на кнопку «Войти», откуда он перенаправляется на главную страницу приложения.
+
+![image](https://github.com/user-attachments/assets/217e3e87-effd-47ed-afe7-0326d3b909f2)
+
+Рисунок 1 – Страница авторизации
+
+Если у оператора нет аккаунта, то он может создать новый, нажав на кнопку «Зарегистрироваться». Страница регистрации представлена на рисунке 2.
+
+![image](https://github.com/user-attachments/assets/54e11edd-d217-462e-845c-2eb07697aca4)
+
+Рисунок 2 – Страница регистрации
+
+После успешной авторизации оператор переходит на главную страницу. Главная страница представлена на рисунке 3.
+
+![image](https://github.com/user-attachments/assets/bd830671-9d20-4045-a3d1-2565ed2085d9)
+
+Рисунок 3 – Главная страница
+
+Для подробного просмотра и получения дополнительной информации о об агрегаторах оператор может нажать на кнопку «Инфографика», и он увидит данные об агрегаторах. На рисунке 4 представлен обзор процесса.
+
+![image](https://github.com/user-attachments/assets/73f19eff-d0e7-4c86-afa4-2a5b82deb334)
+
+Рисунок 4 – Инфографика
+
+Для работы с данными агрегаторов и оценками пользователей оператор может перейти во вкладку «Рейтинг». На рисунке 5 представлено окно рейтинга.
+
+![image](https://github.com/user-attachments/assets/3400cdbf-3b99-4646-9c2d-dc0574553200)
+
+Рисунок 5 – Рейтинг
+
+Для просмотра анкет нужно перейти на вкладку «Анкеты» в блоке навигации, и оператору будут доступны анкеты. На рисунке 6 представлены комментарии процесса.
+
+![image](https://github.com/user-attachments/assets/64d85540-c0b8-4403-8b22-81815b3e6a58)
+
+Рисунок 6 – Анкеты
