@@ -38,18 +38,14 @@
 
 openapi: 3.0.0
 info:
-  title: Сервис аутентификации
-  description: API для регистрации и авторизации пользователей.
+  title: Authentication API
+  description: API для аутентификации пользователей и выдачи JWT токена
   version: 1.0.0
-servers:
-  - url: http://localhost:8080/api/v1/auth
-security:
-  - BearerAuth: []
 paths:
-  /register:
+  /auth/login:
     post:
-      summary: Регистрация нового пользователя
-      description: Регистрация нового пользователя в системе.
+      summary: Аутентификация пользователя
+      description: Принимает учетные данные пользователя и возвращает JWT токен
       requestBody:
         required: true
         content:
@@ -59,73 +55,41 @@ paths:
               properties:
                 username:
                   type: string
-                  example: "dima"
+                  example: user@example.com
                 password:
                   type: string
-                  example: "qwe123"
-                email:
-                  type: string
-                  example: "dima@example.com"
+                  example: securepassword
       responses:
-        '201':
-          description: Пользователь успешно зарегистрирован
+        "200":
+          description: Успешная аутентификация
           content:
             application/json:
-              examples:
-                application/json:
-                  value:
-                    message: "User successfully registered"
-                    userId: 1
-        '400':
-          description: Некорректный запрос (например, уже существует пользователь с таким именем)
-          content:
-            application/json:
-              examples:
-                application/json:
-                  value:
-                    error: "Bad request"
-                    message: "Username already exists"
-  /login:
-    post:
-      summary: Авторизация пользователя
-      description: Пользователь может войти в систему, используя логин и пароль.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: "dima"
-                password:
-                  type: string
-                  example: "qwe123"
-      responses:
-        '200':
-          description: Успешная авторизация, возвращается JWT-токен
-          content:
-            application/json:
-              examples:
-                application/json:
-                  value:
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJqb2huZG9lIiwiZXhwIjoxNzAwNTc0NDAwfQ.NdFQKjL8Zx5aRf4Iu7fDKUBIxaCcglKX3Aq3-NDF68U"
-        '401':
-          description: Неверные логин или пароль
-          content:
-            application/json:
-              examples:
-                application/json:
-                  value:
-                    error: "Unauthorized"
-                    message: "Invalid username or password"
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserDto'
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "401":
+          description: Неверные учетные данные
 components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-
+  schemas:
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: user@example.com
+        roles:
+          type: array
+          items:
+            type: string
+          example: ["ROLE_USER"]
 
 <h1>Оценка качества</h1>
 
