@@ -2,11 +2,11 @@
 
 С4 модель
 
-![Контейнерная диаграмма системы drawio (1)](https://github.com/user-attachments/assets/e2c065d9-d238-4ff5-b543-2c8d76d2340d)
+![image](https://github.com/user-attachments/assets/5eef2a52-a2aa-4280-bcf5-d15a8ed9b775)
 
 Компонентный уровень модели С4
 
-![image](https://github.com/user-attachments/assets/c053b44c-1799-42be-9fd1-0dec17d2e4c3)
+![image](https://github.com/user-attachments/assets/352522fe-8e62-4905-b819-cb6269ff4af3)
 
 Диаграмма классов
 
