@@ -32,64 +32,139 @@
 
 <h1>Документация</h1>
 
-Разработанная документация для сервиса AuthService
+Разработанная документация для сервиса TaxiServiceQualityAssessmentService
 
-![image](https://github.com/user-attachments/assets/fcab0939-5ef7-42ee-a9f9-b691394a2584)
+![image](https://github.com/user-attachments/assets/1ac7b2d6-9e99-48cb-b849-f8ac29da6239)
 
 openapi: 3.0.0
 info:
-  title: Authentication API
-  description: API для аутентификации пользователей и выдачи JWT токена
+  title: Taxi Service Quality Assessment API
+  description: API для оценки качества сервиса такси
   version: 1.0.0
 paths:
-  /auth/login:
-    post:
-      summary: Аутентификация пользователя
-      description: Принимает учетные данные пользователя и возвращает JWT токен
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: user@example.com
-                password:
-                  type: string
-                  example: securepassword
+  /taxi-quality-assessments:
+    get:
+      summary: Получить все оценки качества для текущего пользователя
       responses:
         "200":
-          description: Успешная аутентификация
+          description: Список оценок качества
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  user:
-                    $ref: '#/components/schemas/UserDto'
-                  token:
-                    type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        "401":
-          description: Неверные учетные данные
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxiServiceQualityAssessment'
+  /taxi-quality-assessments/history:
+    get:
+      summary: Получить историю оценок качества
+      responses:
+        "200":
+          description: История оценок качества
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxiServiceQualityAssessment'
+  /taxi-quality-assessments/{id}:
+    get:
+      summary: Найти оценку качества по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Оценка качества
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxiServiceQualityAssessment'
+        "404":
+          description: Оценка не найдена
+    put:
+      summary: Обновить файл отчета
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Файл успешно обновлен
+        "400":
+          description: Некорректный файл
+    delete:
+      summary: Удалить оценку качества (только для теста)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Успешное удаление
+  /taxi-quality-assessments/{id}/approve:
+    put:
+      summary: Одобрить оценку качества
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Оценка качества одобрена
+  /taxi-quality-assessments/{id}/not-approve:
+    put:
+      summary: Отклонить оценку качества
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Оценка качества не одобрена
 components:
   schemas:
-    UserDto:
+    TaxiServiceQualityAssessment:
       type: object
       properties:
         id:
           type: integer
           example: 1
-        username:
+        owner:
           type: string
           example: user@example.com
-        roles:
-          type: array
-          items:
-            type: string
-          example: ["ROLE_USER"]
+        type:
+          type: string
+          example: STANDARD
+        status:
+          type: string
+          example: APPROVED
+        evaluator:
+          type: string
+          example: admin@example.com
+        file:
+          type: string
+          example: "report.pdf"
 
 <h1>Оценка качества</h1>
 
