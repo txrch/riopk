@@ -32,66 +32,86 @@
 
 <h1>Документация</h1>
 
-Разработанная документация для сервиса TaxiServiceQualityAssessmentService
+Разработанная документация для сервиса TaxiServiceQualityAssessmentController
 
-![image](https://github.com/user-attachments/assets/1ac7b2d6-9e99-48cb-b849-f8ac29da6239)
+![image](https://github.com/user-attachments/assets/87f61e5b-c97a-4bdc-8753-b0ef0eb585aa)
 
 openapi: 3.0.0
 info:
   title: Taxi Service Quality Assessment API
-  description: API для оценки качества сервиса такси
-  version: 1.0.0
+  version: "1.0.0"
+  description: API для работы с оценками качества такси
+servers:
+  - url: http://localhost:8080
 paths:
-  /taxi-quality-assessments:
+  /taxi-assessments:
     get:
-      summary: Получить все оценки качества для текущего пользователя
+      summary: Получить все оценки качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [CLIENT, POLICY]
       responses:
-        "200":
-          description: Список оценок качества
+        '200':
+          description: Успешное получение списка оценок
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TaxiServiceQualityAssessment'
-  /taxi-quality-assessments/history:
-    get:
-      summary: Получить историю оценок качества
-      responses:
-        "200":
-          description: История оценок качества
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TaxiServiceQualityAssessment'
-  /taxi-quality-assessments/{id}:
-    get:
-      summary: Найти оценку качества по ID
+                $ref: '#/components/schemas/Result'
+    post:
+      summary: Создать новую оценку качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [CLIENT]
       parameters:
-        - name: id
-          in: path
+        - in: query
+          name: type
           required: true
           schema:
             type: string
+          description: Тип оценки (значение должно соответствовать TaxiServiceQualityAssessmentType)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxiServiceQualityAssessmentDto'
       responses:
-        "200":
-          description: Оценка качества
+        '200':
+          description: Оценка успешно создана
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaxiServiceQualityAssessment'
-        "404":
-          description: Оценка не найдена
-    put:
-      summary: Обновить файл отчета
+                $ref: '#/components/schemas/Result'
+  /taxi-assessments/history:
+    get:
+      summary: Получить историю оценок качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [POLICY]
+      responses:
+        '200':
+          description: Успешное получение истории оценок
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /taxi-assessments/{id}/file:
+    patch:
+      summary: Обновить файл отчёта оценки качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [CLIENT]
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           schema:
             type: string
+          description: Идентификатор оценки
       requestBody:
         required: true
         content:
@@ -102,69 +122,96 @@ paths:
                 file:
                   type: string
                   format: binary
+                  description: Файл отчёта оценки
       responses:
-        "200":
-          description: Файл успешно обновлен
-        "400":
-          description: Некорректный файл
-    delete:
-      summary: Удалить оценку качества (только для теста)
+        '200':
+          description: Файл успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /taxi-assessments/{id}/approved:
+    get:
+      summary: Одобрить оценку качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [POLICY]
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           schema:
             type: string
+          description: Идентификатор оценки
       responses:
-        "204":
-          description: Успешное удаление
-  /taxi-quality-assessments/{id}/approve:
-    put:
-      summary: Одобрить оценку качества
+        '200':
+          description: Оценка успешно одобрена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /taxi-assessments/{id}/not:
+    get:
+      summary: Отклонить оценку качества такси
+      tags:
+        - Taxi Service Quality Assessment
+      security:
+        - bearerAuth: [POLICY]
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           schema:
             type: string
+          description: Идентификатор оценки
       responses:
-        "200":
-          description: Оценка качества одобрена
-  /taxi-quality-assessments/{id}/not-approve:
-    put:
-      summary: Отклонить оценку качества
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Оценка качества не одобрена
+        '200':
+          description: Оценка успешно отклонена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
-    TaxiServiceQualityAssessment:
+    Result:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Флаг успешности операции
+        statusCode:
+          type: string
+          description: Код статуса операции
+        message:
+          type: string
+          description: Сообщение результата
+        data:
+          type: object
+          description: Результирующие данные (структура зависит от запроса)
+    TaxiServiceQualityAssessmentDto:
       type: object
       properties:
         id:
           type: integer
-          example: 1
-        owner:
-          type: string
-          example: user@example.com
+          description: Идентификатор оценки
         type:
           type: string
-          example: STANDARD
+          description: Тип оценки
         status:
           type: string
-          example: APPROVED
-        evaluator:
-          type: string
-          example: admin@example.com
+          description: Статус оценки
         file:
           type: string
-          example: "report.pdf"
+          description: Ссылка или идентификатор файла (если применимо)
+      required:
+        - type
+        - status
 
 <h1>Оценка качества</h1>
 
